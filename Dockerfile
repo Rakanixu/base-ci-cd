@@ -34,10 +34,6 @@ RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/
     apt-get update && \
     apt-get install helm
 
-#RUN curl -sSL -o helm-v3.12.0-linux-amd64 https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz && \
- #   chmod +x helm-v3.11.0-linux-amd64 && \
-  #  mv ./helm-v3.11.0-linux-amd64 /usr/local/bin/helm
-
 RUN rm -rf /var/cache/* && \
     rm -rf /tmp/* && \
     rm -rf /var/log/*
