@@ -18,15 +18,25 @@ RUN chmod +x kubectl
 RUN mv kubectl /usr/local/bin/kubectl
 
 RUN set -ex && \
-    wget https://github.com/argoproj/argo/releases/download/v3.4.2/argo-linux-amd64.gz && \
+    wget https://github.com/argoproj/argo/releases/download/v3.4.8/argo-linux-amd64.gz && \
     gunzip argo-linux-amd64.gz && \
     chmod +x ./argo-linux-amd64 && \
     mv ./argo-linux-amd64 /usr/local/bin/argo
 
-RUN curl -fsSL https://get.pulumi.com | sh
-RUN mkdir -p /usr/local/pulumi
-RUN mv ~/.pulumi/bin /usr/local/pulumi/bin
-ENV PATH=${PATH}:/usr/local/pulumi/bin
+RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 && \
+    install -m 555 argocd-linux-amd64 /usr/local/bin/argocd && \
+    rm argocd-linux-amd64
+
+
+RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null && \
+    apt-get install apt-transport-https --yes && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
+    apt-get update && \
+    apt-get install helm
+
+#RUN curl -sSL -o helm-v3.12.0-linux-amd64 https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz && \
+ #   chmod +x helm-v3.11.0-linux-amd64 && \
+  #  mv ./helm-v3.11.0-linux-amd64 /usr/local/bin/helm
 
 RUN rm -rf /var/cache/* && \
     rm -rf /tmp/* && \
